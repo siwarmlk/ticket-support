@@ -1,0 +1,61 @@
+<a routerLink="/kanban" class="back">Retour au Kanban</a>
+
+@if (isLoading()) {
+  <p class="muted">Chargement...</p>
+} @else if (errorMessage() && !ticket()) {
+  <p class="error">{{ errorMessage() }}</p>
+} @else if (ticket(); as t) {
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  <section class="card">
+    <header class="head">
+      <div>
+        <h2>{{ t.title }}</h2>
+        <p class="meta">Cree le {{ t.createdAt | date: 'short' }}</p>
+      </div>
+      <span class="badge">{{ t.status }}</span>
+    </header>
+
+    <div class="grid">
+      <div>
+        <h3>Client</h3>
+        <p><strong>Nom:</strong> {{ t.lastName }} {{ t.firstName }}</p>
+        <p><strong>Email:</strong> {{ t.email }}</p>
+        <p><strong>Telephone:</strong> {{ t.phone }}</p>
+      </div>
+      <div>
+        <h3>Ticket</h3>
+        <p><strong>Categorie:</strong> {{ t.category }}</p>
+        <p><strong>Assigne a:</strong> {{ t.assignedTo?.username || 'Personne' }}</p>
+      </div>
+    </div>
+
+    <h3>Description</h3>
+    <p class="description">{{ t.description }}</p>
+
+    <div class="actions">
+      <label>
+        Statut
+        <select [ngModel]="t.status" (ngModelChange)="changeStatus($event)">
+          @for (s of statuses; track s) {
+            <option [value]="s">{{ s }}</option>
+          }
+        </select>
+      </label>
+
+      @if (!t.assignedTo) {
+        <button class="btn primary" type="button" (click)="takeTicket()" [disabled]="isSaving()">
+          Prendre ce ticket
+        </button>
+      } @else if (isAssignedToMe(t)) {
+        <button class="btn ghost" type="button" (click)="releaseTicket()" [disabled]="isSaving()">
+          Liberer le ticket
+        </button>
+      } @else {
+        <p class="muted">Deja assigne a {{ t.assignedTo.username }}.</p>
+      }
+    </div>
+  </section>
+}

@@ -1,0 +1,61 @@
+<section class="card">
+  <h2>Nouvelle demande de support</h2>
+  <p class="subtitle">Vos coordonnees et le detail de votre probleme.</p>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+  @if (successMessage()) {
+    <p class="success">{{ successMessage() }}</p>
+  }
+
+  <h3 class="section-title">Vos informations</h3>
+  <div class="form-grid">
+    <label>
+      Prenom
+      <input type="text" [(ngModel)]="form.firstName" placeholder="Jean" />
+    </label>
+    <label>
+      Nom
+      <input type="text" [(ngModel)]="form.lastName" placeholder="Dupont" />
+    </label>
+    <label>
+      Telephone
+      <input type="tel" [(ngModel)]="form.phone" placeholder="06 12 34 56 78" />
+    </label>
+    <label>
+      Email
+      <input type="email" [(ngModel)]="form.email" placeholder="jean.dupont@email.com" />
+    </label>
+  </div>
+
+  <h3 class="section-title">Votre demande</h3>
+  <div class="form-grid">
+    <label>
+      Titre
+      <input type="text" [(ngModel)]="form.title" placeholder="Ex: Je ne peux pas me connecter" />
+    </label>
+
+    <label>
+      Categorie
+      <select [(ngModel)]="form.category">
+        @for (category of categories; track category) {
+          <option [value]="category">{{ category }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="full-width">
+      Description
+      <textarea
+        rows="4"
+        [(ngModel)]="form.description"
+        placeholder="Expliquez votre probleme en detail..."
+      ></textarea>
+    </label>
+  </div>
+
+  <button class="create-btn" (click)="createTicket()" [disabled]="isSubmitting()">
+    {{ isSubmitting() ? 'Envoi...' : 'Envoyer la demande' }}
+  </button>
+</section>

@@ -1,0 +1,55 @@
+<section class="toolbar">
+  <p>
+    <strong>Total tickets:</strong> {{ totalTickets() }}
+    @if (auth.currentUser(); as user) {
+      <span class="user-pill">Connecte: {{ user.username }}</span>
+    }
+  </p>
+  <button class="refresh-btn" type="button" (click)="loadTickets()">Actualiser</button>
+</section>
+
+@if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+}
+
+@if (isLoading()) {
+  <p class="loading">Chargement des tickets...</p>
+} @else {
+  <section class="kanban">
+    @for (status of statuses; track status) {
+      <article class="column">
+        <h3>{{ status }}</h3>
+
+        <div class="ticket-list">
+          @for (ticket of ticketsByStatus(status); track ticket._id) {
+            <div class="ticket">
+              <p class="ticket-title">{{ ticket.title }}</p>
+              <p class="ticket-category">{{ ticket.category }}</p>
+              <p class="ticket-client">{{ ticket.firstName }} {{ ticket.lastName }}</p>
+              @if (ticket.assignedTo) {
+                <p class="assigned">Assigne: {{ ticket.assignedTo.username }}</p>
+              } @else {
+                <p class="assigned free">Non assigne</p>
+              }
+              <p class="ticket-description">{{ ticket.description }}</p>
+
+              <div class="ticket-footer">
+                <a class="detail-link" [routerLink]="['/tickets', ticket._id]">Voir detail</a>
+                <select [ngModel]="ticket.status" (ngModelChange)="moveTicket(ticket, $event)">
+                  @for (nextStatus of statuses; track nextStatus) {
+                    <option [value]="nextStatus">{{ nextStatus }}</option>
+                  }
+                </select>
+                @if (canTake(ticket)) {
+                  <button class="take-btn" type="button" (click)="takeTicket(ticket)">Prendre</button>
+                }
+              </div>
+            </div>
+          } @empty {
+            <p class="empty">Aucun ticket.</p>
+          }
+        </div>
+      </article>
+    }
+  </section>
+}

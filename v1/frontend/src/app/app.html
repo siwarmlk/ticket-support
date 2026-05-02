@@ -1,0 +1,21 @@
+<main class="layout">
+  <header class="topbar">
+    <div>
+      <h1>Support Ticket Manager</h1>
+      <p>Demande client publique, espace support securise.</p>
+    </div>
+    <nav class="nav-links">
+      <a routerLink="/support-request" routerLinkActive="active-link">Demande Support</a>
+      @if (auth.currentUser()) {
+        <a routerLink="/kanban" routerLinkActive="active-link">Kanban</a>
+        <button type="button" class="nav-btn" (click)="logout()">Deconnexion</button>
+      } @else {
+        <a routerLink="/login" routerLinkActive="active-link">Connexion support</a>
+      }
+    </nav>
+  </header>
+
+  <section class="page-content">
+    <router-outlet />
+  </section>
+</main>

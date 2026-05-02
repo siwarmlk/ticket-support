@@ -1,0 +1,34 @@
+<section class="card">
+  <h2>Connexion equipe support</h2>
+  <p class="subtitle">Reserve aux agents. Les clients utilisent la page Demande Support.</p>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  <div class="form-stack">
+    <label>
+      Nom d utilisateur
+      <input type="text" [(ngModel)]="credentials.username" autocomplete="username" />
+    </label>
+    <label>
+      Mot de passe
+      <input
+        type="password"
+        [(ngModel)]="credentials.password"
+        autocomplete="current-password"
+      />
+    </label>
+  </div>
+
+  <button class="primary-btn" (click)="login()" [disabled]="isSubmitting()">
+    {{ isSubmitting() ? 'Connexion...' : 'Se connecter' }}
+  </button>
+
+  <p class="hint">
+    Compte par defaut (si non change dans <code>.env</code>) :
+    <strong>support</strong> / <strong>support123</strong>
+  </p>
+
+  <a class="back-link" routerLink="/support-request">Retour demande client</a>
+</section>
